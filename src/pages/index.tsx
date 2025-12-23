@@ -135,196 +135,200 @@ const Home = () => {
 						Add to Google Wallet
 					</h1>
 
-					{!walletUrl ? (
-						<>
-							<p style={{
-								fontSize: '0.875rem',
-								color: '#6b7280',
-								marginBottom: '1.25rem',
-								textAlign: 'center',
-							}}>
-								Enter your PureGym credentials
-							</p>
+					{!walletUrl
+						? (
+							<>
+								<p style={{
+									fontSize: '0.875rem',
+									color: '#6b7280',
+									marginBottom: '1.25rem',
+									textAlign: 'center',
+								}}>
+									Enter your PureGym credentials
+								</p>
 
-							<form onSubmit={handleSubmit}>
-								<div style={{marginBottom: '1rem'}}>
-									<label style={{
-										display: 'block',
-										color: '#374151',
-										fontSize: '0.875rem',
-										fontWeight: 500,
-										marginBottom: '0.4rem',
+								<form onSubmit={handleSubmit}>
+									<div style={{marginBottom: '1rem'}}>
+										<label style={{
+											display: 'block',
+											color: '#374151',
+											fontSize: '0.875rem',
+											fontWeight: 500,
+											marginBottom: '0.4rem',
+										}}>
+											Email
+											<input
+												type='email'
+												value={email}
+												onChange={(e) => {
+													setEmail(e.target.value);
+												}}
+												placeholder='you@example.com'
+												required
+												style={{
+													width: '100%',
+													padding: '0.75rem 1rem',
+													background: '#f9fafb',
+													border: '2px solid #e5e7eb',
+													borderRadius: '10px',
+													color: '#111',
+													fontSize: '1rem',
+													outline: 'none',
+													boxSizing: 'border-box',
+													transition: 'border-color 0.2s',
+													marginTop: '0.25rem',
+												}}
+											/>
+										</label>
+									</div>
+
+									<div style={{marginBottom: '1.5rem'}}>
+										<label style={{
+											display: 'block',
+											color: '#374151',
+											fontSize: '0.875rem',
+											fontWeight: 500,
+											marginBottom: '0.4rem',
+										}}>
+											PIN
+											<input
+												type='text'
+												inputMode='numeric'
+												value={pin}
+												onChange={(e) => {
+													const value = e.target.value.replace(/\D/g, '').slice(0, 8);
+													setPin(value);
+												}}
+												placeholder='8-digit PIN'
+												pattern='\d{8}'
+												maxLength={8}
+												required
+												style={{
+													width: '100%',
+													padding: '0.75rem 1rem',
+													background: '#f9fafb',
+													border: '2px solid #e5e7eb',
+													borderRadius: '10px',
+													color: '#111',
+													fontSize: '1rem',
+													fontFamily: 'monospace',
+													letterSpacing: '0.25em',
+													outline: 'none',
+													boxSizing: 'border-box',
+													marginTop: '0.25rem',
+												}}
+											/>
+										</label>
+									</div>
+
+									<button
+										type='submit'
+										disabled={loading || pin.length !== 8}
+										style={{
+											width: '100%',
+											padding: '0.875rem',
+											background: loading || pin.length !== 8 ? '#9ca3af' : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+											border: 'none',
+											borderRadius: '10px',
+											color: '#fff',
+											fontSize: '1rem',
+											fontWeight: 600,
+											cursor: loading || pin.length !== 8 ? 'not-allowed' : 'pointer',
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'center',
+											gap: '0.5rem',
+											boxShadow: '0 2px 8px rgba(26, 26, 46, 0.2)',
+										}}
+									>
+										<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+											<rect x='2' y='5' width='20' height='14' rx='2' />
+											<line x1='2' y1='10' x2='22' y2='10' />
+										</svg>
+										{loading ? 'Generating...' : 'Generate Pass'}
+									</button>
+								</form>
+
+								{error && (
+									<div style={{
+										marginTop: '1rem',
+										padding: '0.75rem',
+										background: '#fef2f2',
+										border: '1px solid #fecaca',
+										borderRadius: '8px',
 									}}>
-										Email
-										<input
-											type='email'
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
-											placeholder='you@example.com'
-											required
-											style={{
-												width: '100%',
-												padding: '0.75rem 1rem',
-												background: '#f9fafb',
-												border: '2px solid #e5e7eb',
-												borderRadius: '10px',
-												color: '#111',
-												fontSize: '1rem',
-												outline: 'none',
-												boxSizing: 'border-box',
-												transition: 'border-color 0.2s',
-												marginTop: '0.25rem',
-											}}
-										/>
-									</label>
-								</div>
+										<p style={{
+											color: '#dc2626',
+											fontSize: '0.875rem',
+											margin: 0,
+										}}>{error}</p>
+									</div>
+								)}
+							</>
+						)
+						: (
+							<>
+								<p style={{
+									fontSize: '0.875rem',
+									color: '#6b7280',
+									marginBottom: '1.25rem',
+									textAlign: 'center',
+								}}>
+									Pass ready for {memberName}
+								</p>
 
-								<div style={{marginBottom: '1.5rem'}}>
-									<label style={{
-										display: 'block',
-										color: '#374151',
-										fontSize: '0.875rem',
-										fontWeight: 500,
-										marginBottom: '0.4rem',
-									}}>
-										PIN
-										<input
-											type='text'
-											inputMode='numeric'
-											value={pin}
-											onChange={(e) => {
-												const value = e.target.value.replace(/\D/g, '').slice(0, 8);
-												setPin(value);
-											}}
-											placeholder='8-digit PIN'
-											pattern='\d{8}'
-											maxLength={8}
-											required
-											style={{
-												width: '100%',
-												padding: '0.75rem 1rem',
-												background: '#f9fafb',
-												border: '2px solid #e5e7eb',
-												borderRadius: '10px',
-												color: '#111',
-												fontSize: '1rem',
-												fontFamily: 'monospace',
-												letterSpacing: '0.25em',
-												outline: 'none',
-												boxSizing: 'border-box',
-												marginTop: '0.25rem',
-											}}
-										/>
-									</label>
-								</div>
-
-								<button
-									type='submit'
-									disabled={loading || pin.length !== 8}
+								<a
+									href={walletUrl}
+									target='_blank'
+									rel='noopener noreferrer'
 									style={{
 										width: '100%',
 										padding: '0.875rem',
-										background: loading || pin.length !== 8 ? '#9ca3af' : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+										background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
 										border: 'none',
 										borderRadius: '10px',
 										color: '#fff',
 										fontSize: '1rem',
 										fontWeight: 600,
-										cursor: loading || pin.length !== 8 ? 'not-allowed' : 'pointer',
+										cursor: 'pointer',
 										display: 'flex',
 										alignItems: 'center',
 										justifyContent: 'center',
 										gap: '0.5rem',
 										boxShadow: '0 2px 8px rgba(26, 26, 46, 0.2)',
+										textDecoration: 'none',
+										boxSizing: 'border-box',
 									}}
 								>
 									<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
 										<rect x='2' y='5' width='20' height='14' rx='2' />
 										<line x1='2' y1='10' x2='22' y2='10' />
 									</svg>
-									{loading ? 'Generating...' : 'Generate Pass'}
-								</button>
-							</form>
+									Add to Google Wallet
+								</a>
 
-							{error && (
-								<div style={{
-									marginTop: '1rem',
-									padding: '0.75rem',
-									background: '#fef2f2',
-									border: '1px solid #fecaca',
-									borderRadius: '8px',
-								}}>
-									<p style={{
-										color: '#dc2626',
+								<button
+									onClick={() => {
+										setWalletUrl(null);
+										setMemberName(null);
+										setEmail('');
+										setPin('');
+									}}
+									style={{
+										width: '100%',
+										marginTop: '1rem',
+										padding: '0.5rem',
+										background: 'transparent',
+										border: 'none',
+										color: '#6b7280',
 										fontSize: '0.875rem',
-										margin: 0,
-									}}>{error}</p>
-								</div>
-							)}
-						</>
-					) : (
-						<>
-							<p style={{
-								fontSize: '0.875rem',
-								color: '#6b7280',
-								marginBottom: '1.25rem',
-								textAlign: 'center',
-							}}>
-								Pass ready for {memberName}
-							</p>
-
-							<a
-								href={walletUrl}
-								target='_blank'
-								rel='noopener noreferrer'
-								style={{
-									width: '100%',
-									padding: '0.875rem',
-									background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-									border: 'none',
-									borderRadius: '10px',
-									color: '#fff',
-									fontSize: '1rem',
-									fontWeight: 600,
-									cursor: 'pointer',
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'center',
-									gap: '0.5rem',
-									boxShadow: '0 2px 8px rgba(26, 26, 46, 0.2)',
-									textDecoration: 'none',
-									boxSizing: 'border-box',
-								}}
-							>
-								<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-									<rect x='2' y='5' width='20' height='14' rx='2' />
-									<line x1='2' y1='10' x2='22' y2='10' />
-								</svg>
-								Add to Google Wallet
-							</a>
-
-							<button
-								onClick={() => {
-									setWalletUrl(null);
-									setMemberName(null);
-									setEmail('');
-									setPin('');
-								}}
-								style={{
-									width: '100%',
-									marginTop: '1rem',
-									padding: '0.5rem',
-									background: 'transparent',
-									border: 'none',
-									color: '#6b7280',
-									fontSize: '0.875rem',
-									cursor: 'pointer',
-								}}
-							>
-								Generate another pass
-							</button>
-						</>
-					)}
+										cursor: 'pointer',
+									}}
+								>
+									Generate another pass
+								</button>
+							</>
+						)}
 
 					{/* Unofficial disclaimer */}
 					<div style={{
