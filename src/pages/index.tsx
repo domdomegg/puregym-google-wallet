@@ -36,71 +36,270 @@ const Home = () => {
 	};
 
 	return (
-		<div className='min-h-screen bg-gray-100 py-12 px-4'>
-			<div className='max-w-md mx-auto bg-white rounded-lg shadow-md p-8'>
-				<h1 className='text-2xl font-bold text-center mb-2'>PureGym</h1>
-				<p className='text-gray-600 text-center mb-8'>Google Wallet Pass</p>
+		<div style={{
+			minHeight: '100vh',
+			background: '#f0f4f8',
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			padding: '2rem',
+			fontFamily: '\'Google Sans\', \'Segoe UI\', system-ui, sans-serif',
+		}}>
+			{/* Decorative background cards */}
+			<div style={{
+				position: 'fixed',
+				top: '10%',
+				left: '5%',
+				width: '40vw',
+				height: '20vw',
+				background: 'linear-gradient(135deg, #00c1c6 0%, #00999d 100%)',
+				borderRadius: '12px',
+				opacity: 0.12,
+				transform: 'rotate(-12deg)',
+			}} />
+			<div style={{
+				position: 'fixed',
+				bottom: '15%',
+				right: '8%',
+				width: '35vw',
+				height: '17.5vw',
+				background: 'linear-gradient(135deg, #00999d 0%, #007a7d 100%)',
+				borderRadius: '12px',
+				opacity: 0.1,
+				transform: 'rotate(8deg)',
+			}} />
 
-				{!walletUrl
-					? (
-						<form onSubmit={handleSubmit} className='space-y-4'>
-							<div>
-								<label htmlFor='email' className='block text-sm font-medium text-gray-700 mb-1'>
-									Email
-								</label>
-								<input
-									type='email'
-									id='email'
-									value={email}
-									onChange={(e) => {
-										setEmail(e.target.value);
+			<div style={{
+				position: 'relative',
+				width: '100%',
+				maxWidth: '380px',
+			}}>
+
+				{/* Pass card preview - full width */}
+				<div style={{
+					background: '#202020',
+					borderRadius: '12px',
+					padding: '1rem 1.25rem',
+					marginBottom: '1.5rem',
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}>
+					<div>
+						<div style={{
+							fontSize: '0.65rem',
+							color: 'rgba(255,255,255,0.5)',
+							letterSpacing: '0.1em',
+							textTransform: 'uppercase',
+							marginBottom: '0.2rem',
+						}}>
+							Membership
+						</div>
+						<div style={{
+							fontSize: '1.2rem',
+							fontWeight: 600,
+							color: '#fff',
+							letterSpacing: '-0.01em',
+						}}>
+							PureGym
+						</div>
+					</div>
+					<img
+						src='https://www.puregym.com/BrowserIcons/favicon.ico'
+						alt='PureGym'
+						style={{
+							width: '48px',
+							height: '48px',
+							borderRadius: '10px',
+							objectFit: 'cover',
+						}}
+					/>
+				</div>
+
+				{/* Main card containing everything */}
+				<div style={{
+					background: '#fff',
+					borderRadius: '20px',
+					padding: '1.75rem',
+					boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+				}}>
+
+					{/* Header */}
+					<h1 style={{
+						fontSize: '1.5rem',
+						fontWeight: 600,
+						color: '#1a1a2e',
+						textAlign: 'center',
+						margin: 0,
+					}}>
+						Add to Google Wallet
+					</h1>
+
+					{!walletUrl ? (
+						<>
+							<p style={{
+								fontSize: '0.875rem',
+								color: '#6b7280',
+								marginBottom: '1.25rem',
+								textAlign: 'center',
+							}}>
+								Enter your PureGym credentials
+							</p>
+
+							<form onSubmit={handleSubmit}>
+								<div style={{marginBottom: '1rem'}}>
+									<label style={{
+										display: 'block',
+										color: '#374151',
+										fontSize: '0.875rem',
+										fontWeight: 500,
+										marginBottom: '0.4rem',
+									}}>
+										Email
+										<input
+											type='email'
+											value={email}
+											onChange={(e) => setEmail(e.target.value)}
+											placeholder='you@example.com'
+											required
+											style={{
+												width: '100%',
+												padding: '0.75rem 1rem',
+												background: '#f9fafb',
+												border: '2px solid #e5e7eb',
+												borderRadius: '10px',
+												color: '#111',
+												fontSize: '1rem',
+												outline: 'none',
+												boxSizing: 'border-box',
+												transition: 'border-color 0.2s',
+												marginTop: '0.25rem',
+											}}
+										/>
+									</label>
+								</div>
+
+								<div style={{marginBottom: '1.5rem'}}>
+									<label style={{
+										display: 'block',
+										color: '#374151',
+										fontSize: '0.875rem',
+										fontWeight: 500,
+										marginBottom: '0.4rem',
+									}}>
+										PIN
+										<input
+											type='text'
+											inputMode='numeric'
+											value={pin}
+											onChange={(e) => {
+												const value = e.target.value.replace(/\D/g, '').slice(0, 8);
+												setPin(value);
+											}}
+											placeholder='8-digit PIN'
+											pattern='\d{8}'
+											maxLength={8}
+											required
+											style={{
+												width: '100%',
+												padding: '0.75rem 1rem',
+												background: '#f9fafb',
+												border: '2px solid #e5e7eb',
+												borderRadius: '10px',
+												color: '#111',
+												fontSize: '1rem',
+												fontFamily: 'monospace',
+												letterSpacing: '0.25em',
+												outline: 'none',
+												boxSizing: 'border-box',
+												marginTop: '0.25rem',
+											}}
+										/>
+									</label>
+								</div>
+
+								<button
+									type='submit'
+									disabled={loading || pin.length !== 8}
+									style={{
+										width: '100%',
+										padding: '0.875rem',
+										background: loading || pin.length !== 8 ? '#9ca3af' : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+										border: 'none',
+										borderRadius: '10px',
+										color: '#fff',
+										fontSize: '1rem',
+										fontWeight: 600,
+										cursor: loading || pin.length !== 8 ? 'not-allowed' : 'pointer',
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										gap: '0.5rem',
+										boxShadow: '0 2px 8px rgba(26, 26, 46, 0.2)',
 									}}
-									className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black'
-									required
-								/>
-							</div>
-							<div>
-								<label htmlFor='pin' className='block text-sm font-medium text-gray-700 mb-1'>
-									PIN (8 digits)
-								</label>
-								<input
-									type='text'
-									inputMode='numeric'
-									id='pin'
-									value={pin}
-									onChange={(e) => {
-										const value = e.target.value.replace(/\D/g, '').slice(0, 8);
-										setPin(value);
-									}}
-									pattern='\d{8}'
-									maxLength={8}
-									placeholder='12345678'
-									className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black font-mono tracking-widest'
-									required
-								/>
-							</div>
-							<button
-								type='submit'
-								disabled={loading || pin.length !== 8}
-								className='w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 disabled:bg-gray-400 transition-colors'
-							>
-								{loading ? 'Generating...' : 'Get Wallet Pass'}
-							</button>
-						</form>
-					)
-					: (
-						<div className='space-y-6'>
-							<div className='text-center'>
-								<p className='text-lg font-medium'>{memberName}</p>
-								<p className='text-gray-600 text-sm mt-1'>Pass generated successfully</p>
-							</div>
+								>
+									<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+										<rect x='2' y='5' width='20' height='14' rx='2' />
+										<line x1='2' y1='10' x2='22' y2='10' />
+									</svg>
+									{loading ? 'Generating...' : 'Generate Pass'}
+								</button>
+							</form>
+
+							{error && (
+								<div style={{
+									marginTop: '1rem',
+									padding: '0.75rem',
+									background: '#fef2f2',
+									border: '1px solid #fecaca',
+									borderRadius: '8px',
+								}}>
+									<p style={{
+										color: '#dc2626',
+										fontSize: '0.875rem',
+										margin: 0,
+									}}>{error}</p>
+								</div>
+							)}
+						</>
+					) : (
+						<>
+							<p style={{
+								fontSize: '0.875rem',
+								color: '#6b7280',
+								marginBottom: '1.25rem',
+								textAlign: 'center',
+							}}>
+								Pass ready for {memberName}
+							</p>
 
 							<a
 								href={walletUrl}
 								target='_blank'
 								rel='noopener noreferrer'
-								className='block w-full bg-black text-white py-3 px-4 rounded-md text-center hover:bg-gray-800 transition-colors'
+								style={{
+									width: '100%',
+									padding: '0.875rem',
+									background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+									border: 'none',
+									borderRadius: '10px',
+									color: '#fff',
+									fontSize: '1rem',
+									fontWeight: 600,
+									cursor: 'pointer',
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									gap: '0.5rem',
+									boxShadow: '0 2px 8px rgba(26, 26, 46, 0.2)',
+									textDecoration: 'none',
+									boxSizing: 'border-box',
+								}}
 							>
+								<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
+									<rect x='2' y='5' width='20' height='14' rx='2' />
+									<line x1='2' y1='10' x2='22' y2='10' />
+								</svg>
 								Add to Google Wallet
 							</a>
 
@@ -108,23 +307,53 @@ const Home = () => {
 								onClick={() => {
 									setWalletUrl(null);
 									setMemberName(null);
+									setEmail('');
+									setPin('');
 								}}
-								className='w-full text-gray-600 py-2 px-4 hover:text-gray-800 transition-colors text-sm'
+								style={{
+									width: '100%',
+									marginTop: '1rem',
+									padding: '0.5rem',
+									background: 'transparent',
+									border: 'none',
+									color: '#6b7280',
+									fontSize: '0.875rem',
+									cursor: 'pointer',
+								}}
 							>
 								Generate another pass
 							</button>
-						</div>
+						</>
 					)}
 
-				{error && (
-					<div className='mt-4 p-3 bg-red-50 border border-red-200 rounded-md'>
-						<p className='text-red-700 text-sm'>{error}</p>
+					{/* Unofficial disclaimer */}
+					<div style={{
+						marginTop: '1.5rem',
+						textAlign: 'center',
+					}}>
+						<p style={{
+							color: '#9ca3af',
+							fontSize: '0.7rem',
+							margin: 0,
+						}}>
+							Unofficial project · Not affiliated with PureGym
+						</p>
+						<a
+							href='https://github.com/domdomegg/puregym-google-wallet'
+							target='_blank'
+							rel='noopener noreferrer'
+							style={{
+								color: '#00999d',
+								fontSize: '0.7rem',
+								textDecoration: 'none',
+								marginTop: '0.25rem',
+								display: 'inline-block',
+							}}
+						>
+							View on GitHub →
+						</a>
 					</div>
-				)}
-
-				<p className='mt-8 text-xs text-gray-500 text-center'>
-					Your pass will automatically update when the QR code changes.
-				</p>
+				</div>
 			</div>
 		</div>
 	);

@@ -3,7 +3,7 @@ import {getAllUsers, updateUser} from './storage';
 import {refreshAccessToken, getQrCode} from './puregym';
 import {updatePass} from './wallet';
 
-const REFRESH_INTERVAL = process.env.REFRESH_INTERVAL || '0 * * * *'; // Default: every hour
+const REFRESH_INTERVAL = process.env.REFRESH_INTERVAL || '0 0 * * *'; // Default: daily at midnight
 
 async function refreshUserPass(user: ReturnType<typeof getAllUsers>[number]): Promise<void> {
 	try {

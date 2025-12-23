@@ -7,7 +7,7 @@ Inspired by [Vadim Drobinin's Apple Wallet version](https://drobinin.com/posts/h
 ## Features
 
 - Enter your PureGym credentials to generate a Google Wallet pass
-- Pass updates automatically when QR code changes (hourly refresh)
+- Pass updates automatically when QR code changes (daily refresh)
 
 ## Setup
 
@@ -33,7 +33,7 @@ Then manually:
 GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"..."}
 GOOGLE_WALLET_ISSUER_ID=3388000000012345678
 DATA_DIR=/app/data
-REFRESH_INTERVAL=0 * * * *  # Cron expression, default: every hour
+REFRESH_INTERVAL=0 0 * * *  # Cron expression, default: daily at midnight
 ```
 
 ### 3. Run with Docker
@@ -63,28 +63,19 @@ npm run build
 npm run serve
 ```
 
-## Deployment
+## Contributing
 
-The Docker image is automatically built and pushed to `ghcr.io/domdomegg/puregym-google-wallet` on push to master.
+Pull requests are welcomed on GitHub! To get started:
 
-For homelab deployment with k8s/Pulumi, add to your `appDefinitions.ts`:
+1. Install Git and Node.js
+2. Clone the repository
+3. Install dependencies with `npm install`
+4. Run the app with `npm start`
+5. Run `npm run test` to run tests
+6. Build with `npm run build`
 
-```typescript
-{
-  name: 'puregym-google-wallet',
-  image: 'ghcr.io/domdomegg/puregym-google-wallet:latest',
-  port: 3000,
-  env: {
-    GOOGLE_SERVICE_ACCOUNT_JSON: '...',
-    GOOGLE_WALLET_ISSUER_ID: '...',
-  },
-  volumes: [{
-    name: 'data',
-    mountPath: '/app/data',
-  }],
-}
-```
+## Releases
 
-## License
+Versions follow the [semantic versioning spec](https://semver.org/).
 
-AGPL-3.0-only
+Commits to the master branch are automatically built and pushed to the GitHub Container Registry at `ghcr.io/domdomegg/puregym-google-wallet`.
