@@ -1,21 +1,25 @@
 {
-  "name": "typescript-webapp-template",
+  "name": "puregym-google-wallet",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-only",
   "scripts": {
     "start": "next dev --turbopack",
     "build": "next build",
+    "serve": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.3",
     "next": "^15.4.10",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "jose": "^6.0.10",
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.13.1",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.19.0",

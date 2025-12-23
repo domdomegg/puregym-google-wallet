@@ -1,52 +1,90 @@
-# typescript-webapp-template
+# PureGym Google Wallet
 
-Personal template for creating TypeScript web applications with Next.js.
+Add your PureGym membership to Google Wallet. The pass automatically updates when your QR code changes.
 
-## Quick start
+Inspired by [Vadim Drobinin's Apple Wallet version](https://drobinin.com/posts/how-i-accidentally-became-puregyms-unofficial-apple-wallet-developer/).
 
-1. Update the package name in `package.json`
-2. Set 'Source' to 'GitHub Actions' in _Settings > Pages_
-3. Enable 'Allow GitHub Actions to create and approve pull requests' in _Settings > Actions (General) > Workflow permissions_
-4. Set protection on the master branch: require a pull request before merging, require reivew from code owners, require status checks to pass (select both ci options)
-5. Add the repo to the [file sync automation rules](https://github.com/domdomegg/domdomegg/blob/master/.github/workflows/repo-file-sync.yaml)
-6. Update the README, using the template commented out below
+## Features
 
-## Enabling API routes
+- Enter your PureGym credentials to generate a Google Wallet pass
+- Pass updates automatically when QR code changes (hourly refresh)
 
-This template is primarily meant for static sites hosted on GitHub pages. However, if you want to enable API routes:
+## Setup
 
-1. Edit `next.config.ts` to remove the line `output: 'export',`
-2. Add an `api` folder in [`pages`](./src/pages). You can then add routes, such as `ping.ts` for /api/ping:
-    ```ts
-    import type { NextApiRequest, NextApiResponse } from "next";
-    
-    export default function handler(req: NextApiRequest, res: NextApiResponse<{ pong: true }>) {
-        res.status(200).json({ pong: true });
-    }
-    ```
-3. Change the hosting setup, as running code is not supported on GitHub Actions
+### 1. Google Cloud Setup
 
-<!--
+```bash
+gcloud projects create puregym-g-wallet --name="PureGym Google Wallet"
+gcloud config set project puregym-g-wallet
+gcloud services enable walletobjects.googleapis.com
+gcloud iam service-accounts create wallet-issuer
+gcloud iam service-accounts keys create service-account-key.json \
+  --iam-account=wallet-issuer@puregym-g-wallet.iam.gserviceaccount.com
+```
 
-# TODO: name of webapp [(view live)](https://adamjones.me/TODO-webapp-name/)
+Then manually:
+1. Go to [Google Wallet Console](https://pay.google.com/business/console/)
+2. Create an Issuer account and note your **Issuer ID**
+3. Add `wallet-issuer@puregym-g-wallet.iam.gserviceaccount.com` as a Developer
 
-TODO: A short description of what the webapp does, explaining why people might want to use it.
+### 2. Environment Variables
 
-TODO: A screenshot of the app
+```env
+GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"..."}
+GOOGLE_WALLET_ISSUER_ID=3388000000012345678
+DATA_DIR=/app/data
+REFRESH_INTERVAL=0 * * * *  # Cron expression, default: every hour
+```
 
-## Contributing
+### 3. Run with Docker
 
-Pull requests are welcomed on GitHub! To get started:
+```bash
+docker run -d \
+  -p 3000:3000 \
+  -v puregym-data:/app/data \
+  -e GOOGLE_SERVICE_ACCOUNT_JSON='...' \
+  -e GOOGLE_WALLET_ISSUER_ID='...' \
+  ghcr.io/domdomegg/puregym-google-wallet:latest
+```
 
-1. Install Git and Node.js
-2. Clone the repository
-3. Install dependencies with `npm install`
-4. Run the app with `npm start`
-5. Run `npm run test` to run tests
-6. Build with `npm run build`
+## Development
 
-## Releases
+```bash
+# Install dependencies
+npm install
 
-Commits to the master branch are automatically published to GitHub Pages.
+# Run development server
+npm start
 
--->
+# Build for production
+npm run build
+
+# Run production server
+npm run serve
+```
+
+## Deployment
+
+The Docker image is automatically built and pushed to `ghcr.io/domdomegg/puregym-google-wallet` on push to master.
+
+For homelab deployment with k8s/Pulumi, add to your `appDefinitions.ts`:
+
+```typescript
+{
+  name: 'puregym-google-wallet',
+  image: 'ghcr.io/domdomegg/puregym-google-wallet:latest',
+  port: 3000,
+  env: {
+    GOOGLE_SERVICE_ACCOUNT_JSON: '...',
+    GOOGLE_WALLET_ISSUER_ID: '...',
+  },
+  volumes: [{
+    name: 'data',
+    mountPath: '/app/data',
+  }],
+}
+```
+
+## License
+
+AGPL-3.0-only
