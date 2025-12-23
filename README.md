@@ -2,6 +2,10 @@
 
 Add your PureGym membership to Google Wallet. The pass automatically updates when your QR code changes.
 
+**Try it out:** [puregym.home.adamjones.me](https://puregym.home.adamjones.me)
+
+![Screenshot](screenshot.png)
+
 Inspired by [Vadim Drobinin's Apple Wallet version](https://drobinin.com/posts/how-i-accidentally-became-puregyms-unofficial-apple-wallet-developer/).
 
 ## Features
