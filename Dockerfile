@@ -38,7 +38,7 @@ USER nextjs
 EXPOSE 3000
 
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV HOSTNAME="::"
 ENV DATA_DIR=/app/data
 
 CMD ["node", "server.js"]
